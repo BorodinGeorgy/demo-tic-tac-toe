@@ -1,6 +1,9 @@
 let command = process.argv[2];
 let params = process.argv.slice(3);
 
+let storage = require('./storage');
+let moves = require('./moves');
+
 switch (command) {
     case 'start':
         startCommand();
@@ -11,6 +14,7 @@ switch (command) {
         break;
 
     case 'move':
+        moveCommand(params);
         break;
 
     case 'help':
@@ -19,14 +23,21 @@ switch (command) {
         break;
 }
 
+function moveCommand(params) {
+    let game = storage.loadGame() || createGame();
+    moves.player(params[0], game);
+    // computer move
+    storage.saveGame(game);
+}
+
 function startCommand() {
     let game = createGame();
 
-    saveGame(game);
+    storage.saveGame(game);
 }
 
 function printCommand() {
-    let game = loadGame();
+    let game = storage.loadGame();
 
     if (game) {
         printGame(game);
@@ -56,35 +67,6 @@ function createGame() {
     };
 
     return game;
-}
-
-function saveGame(game) {
-    let fs = require('fs');
-    let serialized = JSON.stringify(game, null, 2);
-
-    fs.writeFileSync('game.json', serialized);
-}
-
-function loadGame() {
-    let fs = require('fs');
-
-    try {
-        let serialized = fs.readFileSync('game.json', 'utf-8');
-        
-        return JSON.parse(serialized);
-    } catch (err) {
-        if (err instanceof SyntaxError) {
-            console.error('Save file corrupted');
-            return null;
-        }
-
-        if (err.code === 'ENOENT') {
-            console.error('No game in process');
-            return null;
-        }
-
-        throw err;
-    }
 }
 
 function helpCommand() {
