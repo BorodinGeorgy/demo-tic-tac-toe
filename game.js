@@ -3,6 +3,8 @@ let params = process.argv.slice(3);
 
 switch (command) {
     case 'start':
+        let game = createGame();
+        saveGame(game);
         break;
 
     case 'print':
@@ -15,6 +17,27 @@ switch (command) {
     default:
         helpCommand();
         break;
+}
+
+function createGame() {
+    let game = {
+        board: [
+            ' ', ' ', ' ',
+            ' ', ' ', ' ',
+            ' ', ' ', ' ',
+        ],
+        player: '⚽️',
+        computer: '🏀',
+    };
+
+    return game;
+}
+
+function saveGame(game) {
+    let fs = require('fs');
+    let serialized = JSON.stringify(game, null, 2);
+
+    fs.writeFileSync('game.json', serialized);
 }
 
 function helpCommand() {
