@@ -26,7 +26,7 @@ switch (command) {
 function moveCommand(params) {
     let game = storage.loadGame() || createGame();
     moves.player(params[0], game);
-    // computer move
+    moves.computer(game);
     storage.saveGame(game);
 }
 

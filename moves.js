@@ -17,3 +17,19 @@ function playerMove(index, game) {
 }
 
 exports.player = playerMove;
+
+function randomInt(max) {
+    return Math.floor(Math.random() * max);
+}
+
+function computerMove(game) {
+    let index;
+
+    do {
+        index = randomInt(game.board.length);
+    } while (game.board[index] !== ' ');
+
+    game.board[index] = game.computer;
+}
+
+exports.computer = computerMove;
